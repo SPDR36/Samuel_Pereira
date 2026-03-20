@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTA 20 - Aplicação de Fixação de Termos v2.0</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .admin-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eaeaea;
+            transition: all 0.3s ease;
+            max-height: 1000px;
+            overflow: hidden;
+        }
+        
+        .admin-section.minimized {
+            max-height: 60px;
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .admin-title {
+            font-size: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .toggle-admin-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .admin-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .input-group {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .library-section {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .library-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .library-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .library-btn {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+        }
+        
+        .import-btn {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .folder-system {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .folder-toolbar {
+            background: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .folder-btn {
+            padding: 6px 12px;
+            font-size: 13px;
+            background: #6c757d;
+        }
+        
+        .folder-btn.primary {
+            background: #28a745;
+        }
+        
+        .folder-btn.danger {
+            background: #dc3545;
+        }
+        
+        .folder-breadcrumb {
+            padding: 10px;
+            background: #e9ecef;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .breadcrumb-item {
+            cursor: pointer;
+            color: #007bff;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .breadcrumb-item:hover {
+            background: #dee2e6;
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-separator {
+            color: #6c757d;
+            margin: 0 5px;
+        }
+        
+        .folder-content {
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            background: white;
+        }
+        
+        .folder-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .folder-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            user-select: none;
+        }
+        
+        .folder-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .folder-item.selected {
+            background: #cce5ff;
+            border-color: #007bff;
+        }
+        
+        .folder-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .folder-name {
+            font-size: 13px;
+            text-align: center;
+            word-break: break-word;
+            font-weight: 500;
+        }
+        
+        .folder-item.folder .folder-icon {
+            color: #ffc107;
+        }
+        
+        .folder-item.case .folder-icon {
+            color: #007bff;
+        }
+        
+        .folder-item-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: none;
+            gap: 3px;
+        }
+        
+        .folder-item:hover .folder-item-actions {
+            display: flex;
+        }
+        
+        .folder-action-btn {
+            padding: 2px 5px;
+            font-size: 10px;
+            background: #6c757d;
+        }
+        
+        .context-menu {
+            position: fixed;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10000;
+            min-width: 200px;
+        }
+        
+        .context-menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .context-menu-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 300px;
+            max-width: 500px;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .modal-btn.cancel {
+            background: #6c757d;
+        }
+        
+        .saved-cases-container {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .content-area {
+            padding: 20px;
+        }
+        
+        .case-section {
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .case-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #4b6cb7;
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .case-header-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .audio-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .audio-btn.playing {
+            background: #e74c3c;
+        }
+        
+        .case-text {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            line-height: 1.6;
+            font-size: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+            white-space: pre-line;
+            font-family: inherit;
+            text-align: justify;
+        }
+        
+        .term-with-tooltip {
+            position: relative;
+            cursor: help;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 2px dotted #4b6cb7;
+            padding-bottom: 1px;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            max-width: 300px;
+            min-width: 200px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            line-height: 1.4;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        .work-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .parts-sidebar {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .parts-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .parts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            border: 2px dashed #c3cfe2;
+            min-height: 200px;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        
+        .answer-area {
+            flex: 2;
+            min-width: 300px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .work-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stats-panel {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .drop-zone-wrapper {
+            position: relative;
+            border: 3px dashed #c3cfe2;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .drop-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 250px;
+        }
+        
+        .drop-zone.highlight {
+            background-color: #e8f4ff;
+            border-color: #4b6cb7;
+        }
+        
+        .drop-zone-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #7a8ca5;
+            font-size: 18px;
+            text-align: center;
+            pointer-events: none;
+            width: 80%;
+        }
+        
+        .answer-part {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 12px 40px 12px 15px;
+            border-radius: 6px;
+            cursor: move;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-size: 15px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .answer-part:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .answer-part.dragging {
+            opacity: 0.6;
+            transform: scale(1.05);
+        }
+        
+        .answer-part.correct-position {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        
+        .answer-part.incorrect-position {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .highlight-comment {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+            color: #5d4037;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 5px;
+            font-size: 14px;
+            font-style: italic;
+            border-left: 4px solid #ffb300;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease-out;
+            display: none;
+        }
+        
+        .highlight-comment.show {
+            display: block;
+        }
+        
+        .comment-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff9800;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: help;
+        }
+        
+        .part-audio-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .part-audio-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .part-container {
+            position: relative;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .completion-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .completion-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .study-reminder {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+            border-left: 4px solid #ffc107;
+            text-align: center;
+        }
+        
+        .highlight-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffb300 0%, #ff9800 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            max-width: 300px;
+            animation: alertSlideIn 0.3s ease-out;
+        }
+        
+        .format-info {
+            background-color: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 13px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .format-info code {
+            background: #1565c0;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .colorblind-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        
+        .colorblind-toggle.active {
+            background: #e74c3c;
+        }
+        
+        body.colorblind .answer-part {
+            background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+        }
+        
+        body.colorblind .answer-part.correct-position {
+            background: linear-gradient(135deg, #008000 0%, #006400 100%);
+        }
+        
+        body.colorblind .answer-part.incorrect-position {
+            background: linear-gradient(135deg, #b30000 0%, #8b0000 100%);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .simple-credits {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 0 0 12px 12px;
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #eaeaea;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .author-info {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .license-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+            border-left: 3px solid #4b6cb7;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes alertSlideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes alertSlideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            .work-section {
+                flex-direction: column;
+            }
+            .parts-sidebar, .answer-area {
+                width: 100%;
+            }
+            .stats-panel {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>NOTA 20 - Aplicação de Fixação de Termos v2.0</h1>
+            <p class="subtitle">Arraste as partes da resposta para montar a solução correta | Clique direito no quadro "Monte a Resposta" para formatação rápida</p>
+        </header>
+        
+        <div class="admin-section minimized" id="adminSection">
+            <div class="admin-header">
+                <div class="admin-title">📝 Configuração do Caso e Biblioteca</div>
+                <button class="toggle-admin-btn" id="toggleAdminBtn">Maximizar</button>
+            </div>
+            
+            <div class="admin-controls">
+                <div class="input-group">
+                    <label for="caseInput">Caso Prático:</label>
+                    <textarea id="caseInput" rows="4"> Jerónimo vai mudar-se para o Japão. Nessa medida, pretende desfazer-se de um apartamento situado no centro de Braga. Carlota pretende aproveitar a boa oportunidade de negócio e celebra, por escritura pública, um contrato de compra e venda do referido apartamento com Jerónimo, não registando a sua aquisição. Mais tarde, Jerónimo, tomando conhecimento de que o seu amigo Pedro pretendia adquirir para ele o apartamento, querendo favorecê-lo, e sabendo que Carlota não havia registado a sua aquisição, decide celebrar com ele um novo contrato de compra e venda do mesmo apartamento, por documento particular autenticado, sem que este último soubesse de alguma coisa relacionada com o negócio celebrado com Carlota. Pedro procede, de imediato, a todos os registos legalmente exigíveis e muda-se para o apartamento. Carlota, ao deparar-se com esta situação, exige, de imediato, a entrega do apartamento. Quid iuris?</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="answerInput">Resposta:</label>
+                    <textarea id="answerInput" rows="4"> Jerónimo e Carlota celebraram um {CCV:Contrato de Compra e Venda} por escritura pública. A forma legalmente exigida é respeitada. Produzem-se todos os efeitos volitivo-finais pretendidos pelas partes. @fazer referencia ao caso concreto@
+#O proprietário do apartamento é Carlota.
+#Jerónimo e Pedro celebraram um contrato nulo por constituir uma compra e venda de coisa alheia.
+#O registo não sana vícios.
+#Pedro adquire um direito de {oponibilidade relativa:Capacidade de ser oposto a terceiros} em relação a Jerónimo.
+#Carlota não registou a sua propriedade.
+#Carlota não pode opor o seu direito a Pedro.
+#Pedro adquire o direito de propriedade sobre o apartamento. {Aquisição tabular a non domino:Aquisição de bem de quem não é proprietário}
+#Carlota não tem razão em pedir a restituição.</textarea>
+                </div>
+            </div>
+            
+            <div class="format-info">
+                <strong>📝 Formatação disponível:</strong><br>
+                • <code>#</code> separa as partes da resposta<br>
+                • <code>@texto@</code> para comentários/destaques<br>
+                • <code>{termo:explicação}</code> para informações adicionais<br>
+                • <strong>Clique com botão direito</strong> no quadro "Monte a Resposta" para inserir formatação
+            </div>
+            
+            <div class="controls">
+                <button id="setupButton">Configurar Aplicação</button>
+                <button id="clearButton" class="clear-btn">Limpar Campos</button>
+            </div>
+            
+            <div class="library-section">
+                <h3 style="margin-bottom: 15px; color: #2c3e50;">📚 Biblioteca de Casos</h3>
+                
+                <div class="library-controls">
+                    <input type="text" id="caseName" class="library-input" placeholder="Nome do caso atual">
+                    <button id="saveCaseBtn" class="library-btn save-btn">💾 Salvar na Pasta Atual</button>
+                    <button id="exportCaseBtn" class="library-btn import-btn">📤 Exportar</button>
+                    <button id="importCaseBtn" class="library-btn import-btn">📥 Importar</button>
+                    <input type="file" id="fileInput" accept=".json" style="display: none;">
+                </div>
+                
+                <div class="folder-system">
+                    <div class="folder-toolbar">
+                        <button class="folder-btn primary" id="newFolderBtn">📁 Nova Pasta</button>
+                        <button class="folder-btn" id="renameFolderBtn">✏️ Renomear</button>
+                        <button class="folder-btn danger" id="deleteFolderBtn">🗑️ Excluir</button>
+                    </div>
+                    
+                    <div class="folder-breadcrumb" id="breadcrumb">
+                        <span class="breadcrumb-item" data-path="root">📚 Raiz</span>
+                    </div>
+                    
+                    <div class="folder-content" id="folderContent">
+                        <div class="folder-grid" id="folderGrid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <div class="case-section">
+                <h2 class="case-title">
+                    Caso Prático
+                    <div class="case-header-controls">
+                        <button class="audio-btn" id="caseAudioBtn" title="Ouvir/Parar caso">🔊</button>
+                    </div>
+                </h2>
+                <div class="case-text" id="caseDisplay"></div>
+            </div>
+            
+            <div class="work-section">
+                <div class="parts-sidebar">
+                    <h3 class="parts-title">
+                        Partes da Resposta
+                        <button class="audio-btn" id="partsAudioBtn" title="Ouvir/Parar todas as partes">🔊</button>
+                    </h3>
+                    <div class="parts-container" id="answerParts"></div>
+                </div>
+                
+                <div class="answer-area">
+                    <h2 class="work-title">
+                        Monte a Resposta
+                        <button class="audio-btn" id="answerAudioBtn" title="Ouvir/Parar resposta montada">🔊</button>
+                    </h2>
+                    
+                    <div class="stats-panel">
+                        <div class="stat-item">
+                            <div class="stat-value" id="timerDisplay">00:00</div>
+                            <div class="stat-label">TEMPO</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="movesCounter">0</div>
+                            <div class="stat-label">MOVIMENTOS</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="progressCounter">0/<span id="totalParts">0</span></div>
+                            <div class="stat-label">PROGRESSO</div>
+                        </div>
+                    </div>
+                    
+                    <div class="drop-zone-wrapper">
+                        <div class="drop-zone" id="answerArea" contextmenu="false">
+                            <p class="drop-zone-placeholder">Arraste as partes da resposta para esta área</p>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-message" id="completionMessage"></div>
+                    <div class="study-reminder">⚠️ Lembre-se: Esta ferramenta é um auxílio ao estudo, mas <strong>nada substitui a feitura manual dos casos práticos</strong>.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="simple-credits">
+            <div class="author-info">
+                <strong>Desenvolvido por:</strong> Samuel Antonio Pereira (A105848)<br>
+                Estudante do 3º ano de Licenciatura em Direito Pós-Laboral - <strong>Uminho</strong><br>
+                Data de criação: 26 de Novembro de 2025
+            </div>
+            <div class="license-info">
+                <div class="license-title">📄 Termos de Uso:</div>
+                <div>Uso educacional gratuito. Modificações permitidas com atribuição. Proibido uso comercial.</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="colorblind-toggle" id="colorblindToggle">👁️ Modo Daltônico</button>
+
+    <div id="contextMenu" class="context-menu" style="display: none;">
+        <div class="context-menu-item" id="menuTerm">📌 {termo:explicação}</div>
+        <div class="context-menu-item" id="menuComment">💬 @comentário@</div>
+        <div class="context-menu-item" id="menuSeparator">✂️ Inserir # (separador)</div>
+    </div>
+
+    <div id="explanationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">Inserir Explicação</div>
+            <input type="hidden" id="selectedTerm">
+            <textarea id="explanationText" class="modal-input" rows="4" placeholder="Digite a explicação..."></textarea>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="cancelModal">Cancelar</button>
+                <button class="modal-btn" id="confirmModal">Inserir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Código JavaScript completo (funcionalidades drag & drop, pastas, áudio, tooltips)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos
+            const caseInput = document.getElementById('caseInput');
+            const answerInput = document.getElementById('answerInput');
+            const setupButton = document.getElementById('setupButton');
+            const clearButton = document.getElementById('clearButton');
+            const caseDisplay = document.getElementById('caseDisplay');
+            const answerParts = document.getElementById('answerParts');
+            const answerArea = document.getElementById('answerArea');
+            const completionMessage = document.getElementById('completionMessage');
+            const progressCounter = document.getElementById('progressCounter');
+            const totalPartsSpan = document.getElementById('totalParts');
+            const caseNameInput = document.getElementById('caseName');
+            const saveCaseBtn = document.getElementById('saveCaseBtn');
+            const exportCaseBtn = document.getElementById('exportCaseBtn');
+            const importCaseBtn = document.getElementById('importCaseBtn');
+            const fileInput = document.getElementById('fileInput');
+            const folderGrid = document.getElementById('folderGrid');
+            const breadcrumb = document.getElementById('breadcrumb');
+            const newFolderBtn = document.getElementById('newFolderBtn');
+            const renameFolderBtn = document.getElementById('renameFolderBtn');
+            const deleteFolderBtn = document.getElementById('deleteFolderBtn');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const movesCounter = document.getElementById('movesCounter');
+            const adminSection = document.getElementById('adminSection');
+            const toggleAdminBtn = document.getElementById('toggleAdminBtn');
+            const colorblindToggle = document.getElementById('colorblindToggle');
+            const contextMenu = document.getElementById('contextMenu');
+            const menuTerm = document.getElementById('menuTerm');
+            const menuComment = document.getElementById('menuComment');
+            const menuSeparator = document.getElementById('menuSeparator');
+            const explanationModal = document.getElementById('explanationModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const selectedTerm = document.getElementById('selectedTerm');
+            const explanationText = document.getElementById('explanationText');
+            const cancelModal = document.getElementById('cancelModal');
+            const confirmModal = document.getElementById('confirmModal');
+            
+            // Variáveis
+            let answerPartsArray = [];
+            let currentOrder = [];
+            let timerInterval = null;
+            let secondsElapsed = 0;
+            let moveCount = 0;
+            let currentTooltip = null;
+            let tooltipTimeout = null;
+            let isSpeaking = false;
+            let currentUtterance = null;
+            let currentAudioBtn = null;
+            let folderStructure = { type: 'folder', name: 'root', path: '/', children: {} };
+            let currentPath = '/';
+            let selectedItem = null;
+            
+            // Funções auxiliares
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            function processTooltips(text) {
+                return text.replace(/\{([^}]+)\}/g, function(match, content) {
+                    const parts = content.split(':');
+                    if (parts.length >= 2) {
+                        const term = parts[0].trim();
+                        const explanation = parts.slice(1).join(':').trim();
+                        return `<span class="term-with-tooltip" data-explanation="${explanation.replace(/"/g, '&quot;')}">${term}</span>`;
+                    }
+                    return match;
+                });
+            }
+            
+            function initializeTooltips(element) {
+                element.querySelectorAll('.term-with-tooltip').forEach(term => {
+                    term.addEventListener('mouseenter', function(e) {
+                        clearTimeout(tooltipTimeout);
+                        if (currentTooltip) currentTooltip.remove();
+                        currentTooltip = document.createElement('div');
+                        currentTooltip.className = 'tooltip';
+                        currentTooltip.textContent = this.dataset.explanation;
+                        document.body.appendChild(currentTooltip);
+                        const rect = this.getBoundingClientRect();
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                        currentTooltip.style.top = (rect.top + scrollTop - currentTooltip.offsetHeight - 5) + 'px';
+                        currentTooltip.style.left = (rect.left + window.pageXOffset) + 'px';
+                        setTimeout(() => currentTooltip.classList.add('show'), 10);
+                    });
+                    term.addEventListener('mouseleave', function() {
+                        tooltipTimeout = setTimeout(() => {
+                            if (currentTooltip) {
+                                currentTooltip.classList.remove('show');
+                                setTimeout(() => { if (currentTooltip) currentTooltip.remove(); currentTooltip = null; }, 200);
+                            }
+                        }, 100);
+                    });
+                });
+            }
+            
+            function speakText(text, lang, audioBtn) {
+                if (isSpeaking && currentUtterance) {
+                    speechSynthesis.cancel();
+                    isSpeaking = false;
+                    if (currentAudioBtn) { currentAudioBtn.classList.remove('playing'); currentAudioBtn.innerHTML = '🔊'; }
+                }
+                const cleanText = text.replace(/\{([^}]+)\}/g, (m, c) => c.split(':')[0]).trim();
+                if (!cleanText) return;
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = lang;
+                utterance.rate = 1.0;
+                utterance.onstart = function() {
+                    isSpeaking = true;
+                    if (audioBtn) { audioBtn.classList.add('playing'); audioBtn.innerHTML = '⏹️'; currentAudioBtn = audioBtn; }
+                    currentUtterance = utterance;
+                };
+                utterance.onend = utterance.onerror = function() {
+                    isSpeaking = false;
+                    if (currentAudioBtn) { currentAudioBtn.classList.remove('playing'); currentAudioBtn.innerHTML = '🔊'; currentAudioBtn = null; }
+                };
+                speechSynthesis.speak(utterance);
+            }
+            
+            function showAlert(message, type) {
+                const colors = { success: '#27ae60', warning: '#e67e22', info: '#3498db', error: '#e74c3c' };
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'highlight-alert';
+                alertDiv.style.background = `linear-gradient(135deg, ${colors[type] || colors.info} 0%, ${colors[type] || colors.info}99 100%)`;
+                alertDiv.textContent = message;
+                document.body.appendChild(alertDiv);
+                setTimeout(() => { alertDiv.style.animation = 'alertSlideOut 0.3s ease-out'; setTimeout(() => alertDiv.remove(), 300); }, 3000);
+            }
+            
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                secondsElapsed = 0;
+                timerInterval = setInterval(() => { secondsElapsed++; updateTimerDisplay(); }, 1000);
+            }
+            function updateTimerDisplay() { timerDisplay.textContent = `${Math.floor(secondsElapsed/60)}:${(secondsElapsed%60).toString().padStart(2,'0')}`; }
+            function incrementMoveCount() { moveCount++; movesCounter.textContent = moveCount; }
+            function updateProgressIndicator() {
+                let correct = 0;
+                for (let i = 0; i < currentOrder.length; i++) if (currentOrder[i] === i) correct++;
+                progressCounter.textContent = `${correct}/${answerPartsArray.length}`;
+                progressCounter.style.color = correct === answerPartsArray.length ? '#2ecc71' : correct > 0 ? '#f39c12' : '#4b6cb7';
+            }
+            
+            function createAudioButton(partData) {
+                const btn = document.createElement('button');
+                btn.className = 'part-audio-btn';
+                btn.innerHTML = '🔊';
+                btn.addEventListener('click', (e) => { e.stopPropagation(); speakText(partData.text, 'pt-BR', btn); });
+                return btn;
+            }
+            
+            function createPartElement(part, idx) {
+                const el = document.createElement('div');
+                el.className = 'answer-part';
+                el.innerHTML = part.html || part.text;
+                el.draggable = true;
+                el.dataset.index = idx;
+                el.dataset.originalIndex = part.index;
+                el.appendChild(createAudioButton(part));
+                if (part.hasComment) {
+                    const ind = document.createElement('div');
+                    ind.className = 'comment-indicator';
+                    ind.textContent = '!';
+                    ind.title = 'Tem comentário explicativo';
+                    el.appendChild(ind);
+                }
+                el.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', this.dataset.index); });
+                el.addEventListener('dblclick', () => { if (el.parentElement === answerParts) movePartToAnswerArea(el); });
+                initializeTooltips(el);
+                return el;
+            }
+            
+            function movePartToAnswerArea(el) {
+                const idx = parseInt(el.dataset.index);
+                const part = answerPartsArray[idx];
+                incrementMoveCount();
+                const container = document.createElement('div');
+                container.className = 'part-container';
+                const newEl = document.createElement('div');
+                newEl.className = 'answer-part';
+                newEl.innerHTML = part.html || part.text;
+                newEl.dataset.index = idx;
+                newEl.dataset.originalIndex = part.index;
+                newEl.appendChild(createAudioButton(part));
+                if (part.hasComment) {
+                    const ind = document.createElement('div');
+                    ind.className = 'comment-indicator';
+                    ind.textContent = '!';
+                    newEl.appendChild(ind);
+                }
+                container.appendChild(newEl);
+                answerArea.appendChild(container);
+                const placeholder = answerArea.querySelector('.drop-zone-placeholder');
+                if (placeholder) placeholder.remove();
+                el.remove();
+                currentOrder.push(idx);
+                initializeTooltips(newEl);
+                checkPartPosition(newEl, container);
+                updateProgressIndicator();
+            }
+            
+            function checkPartPosition(partEl, container) {
+                const idx = parseInt(partEl.dataset.index);
+                const pos = currentOrder.indexOf(idx);
+                const correctPos = parseInt(partEl.dataset.originalIndex);
+                if (pos === correctPos) {
+                    partEl.classList.add('correct-position');
+                    const part = answerPartsArray[idx];
+                    if (part.hasComment && part.comment && !part.commentShown) {
+                        setTimeout(() => {
+                            const commentDiv = document.createElement('div');
+                            commentDiv.className = 'highlight-comment';
+                            commentDiv.textContent = part.comment;
+                            container.appendChild(commentDiv);
+                            setTimeout(() => commentDiv.classList.add('show'), 10);
+                            part.commentShown = true;
+                        }, 300);
+                    }
+                    if (currentOrder.length === answerPartsArray.length && currentOrder.every((v,i) => v === i)) {
+                        clearInterval(timerInterval);
+                        completionMessage.innerHTML = '<div style="font-size:18px">🎉 Parabéns! Resposta correta!</div>';
+                        completionMessage.classList.add('show');
+                    }
+                } else {
+                    partEl.classList.add('incorrect-position');
+                    setTimeout(() => {
+                        container.remove();
+                        const posIdx = currentOrder.indexOf(idx);
+                        if (posIdx > -1) currentOrder.splice(posIdx, 1);
+                        answerPartsArray[idx].commentShown = false;
+                        answerParts.appendChild(createPartElement(answerPartsArray[idx], idx));
+                        updateProgressIndicator();
+                        if (answerArea.querySelectorAll('.part-container').length === 0) {
+                            const ph = document.createElement('p');
+                            ph.className = 'drop-zone-placeholder';
+                            ph.textContent = 'Arraste as partes da resposta para esta área';
+                            answerArea.appendChild(ph);
+                        }
+                    }, 800);
+                }
+            }
+            
+            function shuffleParts() {
+                const children = Array.from(answerParts.children);
+                children.sort(() => Math.random() - 0.5);
+                children.forEach(c => answerParts.appendChild(c));
+            }
+            
+            // Configuração principal
+            setupButton.addEventListener('click', function() {
+                startTimer();
+                moveCount = 0;
+                movesCounter.textContent = '0';
+                answerPartsArray = [];
+                currentOrder = [];
+                completionMessage.classList.remove('show');
+                if (currentTooltip) currentTooltip.remove();
+                
+                const rawParts = answerInput.value.split('#').map(p => p.trim()).filter(p => p);
+                rawParts.forEach((raw, idx) => {
+                    let processed = raw;
+                    let comment = null;
+                    const commentMatch = raw.match(/@([^@]+)@/);
+                    if (commentMatch) {
+                        comment = commentMatch[1].trim();
+                        processed = raw.replace(/@[^@]+@/, '');
+                    }
+                    const textForDisplay = processTooltips(processed);
+                    const textForAudio = processed.replace(/\{([^}]+)\}/g, (m,c) => c.split(':')[0]).trim();
+                    if (textForAudio) {
+                        answerPartsArray.push({
+                            text: textForAudio,
+                            html: textForDisplay,
+                            comment: comment,
+                            hasComment: !!comment,
+                            index: idx,
+                            commentShown: false
+                        });
+                    }
+                });
+                
+                totalPartsSpan.textContent = answerPartsArray.length;
+                updateProgressIndicator();
+                answerParts.innerHTML = '';
+                answerArea.innerHTML = '<p class="drop-zone-placeholder">Arraste as partes da resposta para esta área</p>';
+                answerPartsArray.forEach((part, idx) => answerParts.appendChild(createPartElement(part, idx)));
+                shuffleParts();
+                caseDisplay.textContent = caseInput.value;
+            });
+            
+            clearButton.addEventListener('click', () => { caseInput.value = ''; answerInput.value = ''; caseNameInput.value = ''; showAlert('Campos limpos!', 'warning'); });
+            toggleAdminBtn.addEventListener('click', () => { adminSection.classList.toggle('minimized'); toggleAdminBtn.textContent = adminSection.classList.contains('minimized') ? 'Maximizar' : 'Minimizar'; });
+            colorblindToggle.addEventListener('click', () => { document.body.classList.toggle('colorblind'); colorblindToggle.classList.toggle('active'); colorblindToggle.textContent = document.body.classList.contains('colorblind') ? '👁️ Modo Normal' : '👁️ Modo Daltônico'; });
+            
+            // Drag and drop
+            answerArea.addEventListener('dragover', (e) => { e.preventDefault(); answerArea.classList.add('highlight'); });
+            answerArea.addEventListener('dragleave', () => answerArea.classList.remove('highlight'));
+            answerArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                answerArea.classList.remove('highlight');
+                const idx = e.dataTransfer.getData('text/plain');
+                const el = document.querySelector(`.answer-part[data-index="${idx}"]`);
+                if (el && el.parentElement === answerParts) movePartToAnswerArea(el);
+            });
+            
+            // Áudio
+            document.getElementById('caseAudioBtn').addEventListener('click', function() { speakText(caseInput.value, 'pt-BR', this); });
+            document.getElementById('partsAudioBtn').addEventListener('click', function() { speakText(answerPartsArray.map(p => p.text).join('. '), 'pt-BR', this); });
+            document.getElementById('answerAudioBtn').addEventListener('click', function() {
+                const partsInArea = Array.from(answerArea.querySelectorAll('.answer-part'));
+                if (partsInArea.length === 0) { showAlert('A resposta ainda não foi montada', 'warning'); return; }
+                const text = partsInArea.map(p => p.textContent.replace(/\s+/g,' ').trim()).join('. ');
+                speakText(text, 'pt-BR', this);
+            });
+            
+            // Menu contextual
+            answerArea.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                const selection = window.getSelection();
+                const selected = selection.toString().trim();
+                contextMenuInfo = { selectedText: selected, x: e.clientX, y: e.clientY, range: selection.rangeCount > 0 ? selection.getRangeAt(0) : null };
+                contextMenu.style.display = 'block';
+                contextMenu.style.left = e.clientX + 'px';
+                contextMenu.style.top = e.clientY + 'px';
+            });
+            document.addEventListener('click', () => contextMenu.style.display = 'none');
+            
+            menuTerm.addEventListener('click', () => {
+                if (!contextMenuInfo.selectedText) { showAlert('Selecione uma palavra primeiro!', 'warning'); return; }
+                selectedTerm.value = contextMenuInfo.selectedText;
+                modalTitle.textContent = `Explicação para: ${contextMenuInfo.selectedText}`;
+                explanationText.value = '';
+                explanationModal.style.display = 'flex';
+                contextMenu.style.display = 'none';
+            });
+            menuComment.addEventListener('click', () => {
+                modalTitle.textContent = 'Digite seu comentário:';
+                selectedTerm.value = '';
+                explanationText.value = '';
+                explanationModal.style.display = 'flex';
+                contextMenu.style.display = 'none';
+            });
+            menuSeparator.addEventListener('click', () => {
+                const start = answerInput.selectionStart;
+                const val = answerInput.value;
+                answerInput.value = val.substring(0, start) + '#' + val.substring(start);
+                answerInput.focus();
+                contextMenu.style.display = 'none';
+            });
+            cancelModal.addEventListener('click', () => explanationModal.style.display = 'none');
+            confirmModal.addEventListener('click', () => {
+                const text = explanationText.value.trim();
+                if (!text) { showAlert('Digite algo!', 'warning'); return; }
+                const start = answerInput.selectionStart;
+                const val = answerInput.value;
+                if (selectedTerm.value) {
+                    answerInput.value = val.substring(0, start) + `{${selectedTerm.value}:${text}}` + val.substring(start);
+                } else {
+                    answerInput.value = val.substring(0, start) + `@${text}@` + val.substring(start);
+                }
+                answerInput.focus();
+                explanationModal.style.display = 'none';
+            });
+            
+            // Sistema de pastas
+            function loadFolderStructure() {
+                const saved = localStorage.getItem('folderStructure');
+                if (saved) folderStructure = JSON.parse(saved);
+                else {
+                    folderStructure = { type: 'folder', name: 'root', path: '/', children: {} };
+                    saveFolderStructure();
+                }
+                renderFolderContent();
+            }
+            function saveFolderStructure() { localStorage.setItem('folderStructure', JSON.stringify(folderStructure)); }
+            function getCurrentFolder() {
+                if (currentPath === '/') return folderStructure;
+                const parts = currentPath.split('/').filter(p => p);
+                let curr = folderStructure;
+                for (const p of parts) if (curr.children && curr.children[p]) curr = curr.children[p];
+                return curr;
+            }
+            function renderFolderContent() {
+                const folder = getCurrentFolder();
+                if (!folder) return;
+                folderGrid.innerHTML = '';
+                const items = Object.entries(folder.children || {}).sort((a,b) => {
+                    if (a[1].type === b[1].type) return a[1].name.localeCompare(b[1].name);
+                    return a[1].type === 'folder' ? -1 : 1;
+                });
+                items.forEach(([key, item]) => {
+                    const div = document.createElement('div');
+                    div.className = `folder-item ${item.type}`;
+                    div.dataset.key = key;
+                    div.innerHTML = `
+                        <div class="folder-icon">${item.type === 'folder' ? '📁' : '📄'}</div>
+                        <div class="folder-name">${escapeHtml(item.name)}</div>
+                        <div class="folder-item-actions">
+                            <button class="folder-action-btn" onclick="event.stopPropagation(); renameItem('${key}')">✏️</button>
+                            <button class="folder-action-btn" onclick="event.stopPropagation(); deleteItem('${key}')">🗑️</button>
+                        </div>
+                    `;
+                    div.addEventListener('click', () => {
+                        if (item.type === 'folder') { currentPath = item.path; renderFolderContent(); updateBreadcrumb(); }
+                        else loadCaseFromFolder(key);
+                        selectedItem = key;
+                        renderFolderContent();
+                    });
+                    folderGrid.appendChild(div);
+                });
+                if (items.length === 0) folderGrid.innerHTML = '<div style="text-align:center;padding:40px;color:#95a5a6;">Pasta vazia</div>';
+            }
+            function updateBreadcrumb() {
+                breadcrumb.innerHTML = '';
+                const root = document.createElement('span');
+                root.className = 'breadcrumb-item';
+                root.textContent = '📚 Raiz';
+                root.onclick = () => { currentPath = '/'; renderFolderContent(); updateBreadcrumb(); };
+                breadcrumb.appendChild(root);
+                const parts = currentPath.split('/').filter(p => p);
+                let path = '';
+                parts.forEach((part, i) => {
+                    const sep = document.createElement('span');
+                    sep.className = 'breadcrumb-separator';
+                    sep.textContent = '›';
+                    breadcrumb.appendChild(sep);
+                    path += '/' + part;
+                    const item = document.createElement('span');
+                    item.className = 'breadcrumb-item';
+                    item.textContent = decodeURIComponent(part);
+                    item.onclick = () => { currentPath = path; renderFolderContent(); updateBreadcrumb(); };
+                    breadcrumb.appendChild(item);
+                });
+            }
+            function renameItem(key) {
+                const folder = getCurrentFolder();
+                const item = folder.children[key];
+                const newName = prompt('Novo nome:', item.name);
+                if (!newName || newName === item.name) return;
+                item.name = newName;
+                saveFolderStructure();
+                renderFolderContent();
+            }
+            function deleteItem(key) {
+                if (!confirm('Tem certeza que deseja excluir este item?')) return;
+                const folder = getCurrentFolder();
+                delete folder.children[key];
+                saveFolderStructure();
+                renderFolderContent();
+            }
+            function loadCaseFromFolder(key) {
+                function findCase(obj, k) {
+                    for (const [id, val] of Object.entries(obj.children || {})) {
+                        if (id === k && val.type === 'case') return val;
+                        if (val.type === 'folder') { const found = findCase(val, k); if (found) return found; }
+                    }
+                    return null;
+                }
+                const caseData = findCase(folderStructure, key);
+                if (caseData) {
+                    caseInput.value = caseData.data.caseText;
+                    answerInput.value = caseData.data.answerText;
+                    caseNameInput.value = caseData.name;
+                    setupButton.click();
+                    showAlert(`Caso "${caseData.name}" carregado!`, 'success');
+                }
+            }
+            function saveCaseToCurrentFolder() {
+                const caseName = caseNameInput.value.trim();
+                if (!caseName) { showAlert('Digite um nome para o caso', 'warning'); return; }
+                const folder = getCurrentFolder();
+                const key = caseName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                folder.children[key] = {
+                    type: 'case',
+                    name: caseName,
+                    path: (currentPath === '/' ? '/' + key : currentPath + key),
+                    data: { caseText: caseInput.value, answerText: answerInput.value, date: new Date().toLocaleString('pt-BR'), id: Date.now(), timeSpent: secondsElapsed, moves: moveCount }
+                };
+                saveFolderStructure();
+                renderFolderContent();
+                showAlert(`✅ Caso "${caseName}" salvo!`, 'success');
+                caseNameInput.value = '';
+            }
+            function exportCurrentCase() {
+                const name = caseNameInput.value.trim() || 'caso-sem-nome';
+                const exportData = { timestamp: new Date().toISOString(), case: { name, caseText: caseInput.value, answerText: answerInput.value, date: new Date().toLocaleString('pt-BR') } };
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `NOTA20_${name.replace(/[^a-z0-9]/gi,'_')}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showAlert('Caso exportado!', 'success');
+            }
+            
+            newFolderBtn.addEventListener('click', () => {
+                const name = prompt('Nome da nova pasta:');
+                if (name) {
+                    const folder = getCurrentFolder();
+                    const key = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                    if (!folder.children[key]) {
+                        folder.children[key] = { type: 'folder', name: name, path: (currentPath === '/' ? '/' + key : currentPath + key + '/'), children: {} };
+                        saveFolderStructure();
+                        renderFolderContent();
+                    } else showAlert('Já existe um item com este nome!', 'warning');
+                }
+            });
+            renameFolderBtn.addEventListener('click', () => { if (selectedItem) renameItem(selectedItem); else showAlert('Selecione um item primeiro!', 'warning'); });
+            deleteFolderBtn.addEventListener('click', () => { if (selectedItem) deleteItem(selectedItem); else showAlert('Selecione um item primeiro!', 'warning'); });
+            saveCaseBtn.addEventListener('click', saveCaseToCurrentFolder);
+            exportCaseBtn.addEventListener('click', exportCurrentCase);
+            importCaseBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        try {
+                            const data = JSON.parse(ev.target.result);
+                            caseInput.value = data.case?.caseText || data.caseText || '';
+                            answerInput.value = data.case?.answerText || data.answerText || '';
+                            caseNameInput.value = data.case?.name || data.name || '';
+                            setupButton.click();
+                            showAlert('Caso importado!', 'success');
+                        } catch (err) { alert('Erro ao importar: ' + err.message); }
+                        fileInput.value = '';
+                    };
+                    reader.readAsText(file);
+                }
+            });
+            
+            loadFolderStructure();
+            setupButton.click();
+            
+            window.renameItem = renameItem;
+            window.deleteItem = deleteItem;
+            window.loadCaseFromFolder = loadCaseFromFolder;
+            
+            let contextMenuInfo = { selectedText: '' };
+        });
+    </script>
+</body>
+</html>

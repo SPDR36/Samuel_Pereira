@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTA 20 - Aplicação de Fixação de Termos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .admin-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eaeaea;
+            transition: all 0.3s ease;
+            max-height: 1000px;
+            overflow: hidden;
+        }
+        
+        .admin-section.minimized {
+            max-height: 60px;
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .admin-title {
+            font-size: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .toggle-admin-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .admin-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .input-group {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .library-section {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .library-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .library-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .library-btn {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+        }
+        
+        .import-btn {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .saved-cases-container {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .case-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 5px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #4b6cb7;
+        }
+        
+        .case-item:hover {
+            background: #e9ecef;
+        }
+        
+        .case-item-info {
+            flex: 1;
+        }
+        
+        .case-item-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .case-item-date {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .case-item-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .case-action-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        
+        .load-btn {
+            background: #3498db;
+        }
+        
+        .delete-btn {
+            background: #e74c3c;
+        }
+        
+        .content-area {
+            padding: 20px;
+        }
+        
+        .case-section {
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .case-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #4b6cb7;
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .case-header-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .audio-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .audio-btn.playing {
+            background: #e74c3c;
+        }
+        
+        .case-text {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            line-height: 1.6;
+            font-size: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+            white-space: pre-line;
+            font-family: inherit;
+            text-align: justify;
+        }
+        
+        /* TOOLTIP SIMPLES E FUNCIONAL */
+        .term-with-tooltip {
+            position: relative;
+            cursor: help;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 2px dotted #4b6cb7;
+            padding-bottom: 1px;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            max-width: 300px;
+            min-width: 200px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            line-height: 1.4;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        .work-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .parts-sidebar {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .parts-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .parts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            border: 2px dashed #c3cfe2;
+            min-height: 200px;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        
+        .answer-area {
+            flex: 2;
+            min-width: 300px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .work-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stats-panel {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .drop-zone-wrapper {
+            position: relative;
+            border: 3px dashed #c3cfe2;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .drop-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 250px;
+        }
+        
+        .drop-zone.highlight {
+            background-color: #e8f4ff;
+            border-color: #4b6cb7;
+        }
+        
+        .drop-zone-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #7a8ca5;
+            font-size: 18px;
+            text-align: center;
+            pointer-events: none;
+            width: 80%;
+        }
+        
+        .answer-part {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 12px 40px 12px 15px;
+            border-radius: 6px;
+            cursor: move;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-size: 15px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .answer-part:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .answer-part.dragging {
+            opacity: 0.6;
+            transform: scale(1.05);
+        }
+        
+        .answer-part.correct-position {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        
+        .answer-part.incorrect-position {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .highlight-comment {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+            color: #5d4037;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 5px;
+            font-size: 14px;
+            font-style: italic;
+            border-left: 4px solid #ffb300;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease-out;
+            display: none;
+        }
+        
+        .highlight-comment.show {
+            display: block;
+        }
+        
+        .comment-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff9800;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: help;
+        }
+        
+        .part-audio-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .part-audio-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .part-container {
+            position: relative;
+        }
+        
+        .progress-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4b6cb7;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .completion-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .completion-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .study-reminder {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+            border-left: 4px solid #ffc107;
+            text-align: center;
+        }
+        
+        .highlight-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffb300 0%, #ff9800 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            max-width: 300px;
+            animation: alertSlideIn 0.3s ease-out;
+        }
+        
+        .format-info {
+            background-color: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 13px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .format-info code {
+            background: #1565c0;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .navigation-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .nav-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            background: #3498db;
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .colorblind-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        
+        .colorblind-toggle.active {
+            background: #e74c3c;
+        }
+        
+        body.colorblind .answer-part {
+            background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+        }
+        
+        body.colorblind .answer-part.correct-position {
+            background: linear-gradient(135deg, #008000 0%, #006400 100%);
+        }
+        
+        body.colorblind .answer-part.incorrect-position {
+            background: linear-gradient(135deg, #b30000 0%, #8b0000 100%);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        body.colorblind .audio-btn {
+            background: #800080;
+        }
+        
+        body.colorblind .audio-btn.playing {
+            background: #b30000;
+        }
+        
+        body.colorblind .case-text {
+            background-color: #f8f8f8;
+            border: 2px solid #0056b3;
+        }
+        
+        body.colorblind .term-with-tooltip {
+            border-bottom: 2px solid #0056b3;
+            color: #003366;
+        }
+        
+        body.colorblind .highlight-comment {
+            background: linear-gradient(135deg, #e6f2ff 0%, #cce5ff 100%);
+            color: #003366;
+            border-left: 4px solid #0056b3;
+        }
+        
+        .simple-credits {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 0 0 12px 12px;
+            margin-top: 20px;
+            text-align: center;
+            border-top: 1px solid #eaeaea;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .author-info {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .license-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+            border-left: 3px solid #4b6cb7;
+        }
+        
+        .license-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes alertSlideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes alertSlideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            .work-section {
+                flex-direction: column;
+            }
+            
+            .parts-sidebar, .answer-area {
+                width: 100%;
+            }
+            
+            .library-controls {
+                flex-direction: column;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+            }
+            
+            .input-group {
+                min-width: 100%;
+            }
+            
+            .stats-panel {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .simple-credits {
+                padding: 10px;
+                font-size: 12px;
+            }
+            
+            .tooltip {
+                max-width: 250px;
+                min-width: 180px;
+                font-size: 12px;
+            }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>NOTA 20 - Aplicação de Fixação de Termos</h1>
+            <p class="subtitle">Arraste as partes da resposta para montar a solução correta</p>
+        </header>
+        
+        <div class="admin-section minimized" id="adminSection">
+            <div class="admin-header">
+                <div class="admin-title">📝 Configuração do Caso e Biblioteca</div>
+                <button class="toggle-admin-btn" id="toggleAdminBtn">Maximizar</button>
+            </div>
+            
+            <div class="admin-controls">
+                <div class="input-group">
+                    <label for="caseInput">Caso Prático:</label>
+                    <textarea id="caseInput" rows="4"> Jerónimo vai mudar-se para o Japão. Nessa medida, pretende desfazer-se de um apartamento
+situado no centro de Braga. Carlota pretende aproveitar a boa oportunidade de negócio e celebra,
+por escritura pública, um contrato de compra e venda do referido apartamento com Jerónimo, não
+registando a sua aquisição.
+Mais tarde, Jerónimo, tomando conhecimento de que o seu amigo Pedro pretendia adquirir
+para ele o apartamento, querendo favorecê-lo, e sabendo que Carlota não havia registado a sua
+aquisição, decide celebrar com ele um novo contrato de compra e venda do mesmo apartamento,
+por documento particular autenticado, sem que este último soubesse de alguma coisa relacionada
+com o negócio celebrado com Carlota. Pedro procede, de imediato, a todos os registos legalmente
+exigíveis e muda-se para o apartamento.
+Carlota, ao deparar-se com esta situação, exige, de imediato, a entrega do apartamento. Quid
+iuris? </textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="answerInput">Resposta:</label>
+                    <textarea id="answerInput" rows="4"> Jerónimo e Carlota celebraram um {CCV:Contrato de Compra e Venda é um contrato bilateral, sinalagmatico, oneroso, real (quanto aos seus efeitos) tipico e nominado.} (874.o CC) por escritura pública. A forma
+legalmente exigida é respeitada (875.o CC: o apartamento é um {prédio urbano:Imóvel situado em zona urbana} – 202.o e 204.o, n.o 1, a) do CC). Produzem-se todos os efeitos volitivo-finais pretendidos pelas partes (408.o, n.o 1, e 879.o, a), b) e c), do CC.). @fazer referencia ao caso concreto e os efeitos ex: a- efeito real que gera um titulo valido e derivado, b- dever obrigacional de A entregar as chaves do apartamento a B, c- dever obrigacional de B pagar a prestacao pecuniaria a A@
+#O proprietário do apartamento é Carlota.
+
+#Jerónimo e Pedro celebraram um {CCV:Contrato de Compra e Venda 874º, 879º}. Pese embora tenha sido respeitada a forma
+legalmente, é um contrato nulo por constituir uma compra e venda de coisa alheia (cf.
+artigo 892.o do CC), O proprietário do apartamento é Carlota.
+
+#O registo não sana vícios, tendo apenas essencialmente como função dar publicidade à situação jurídica dos prédios (art. 1.o {CRegPred:Código do Registo Predial}).
+
+#Pedro adquire um direito de {oponibilidade relativa:Capacidade de um direito ser oposto a terceiros} {(892.o CC):É nula a venda de bens alheios sempre que o vendedor careça de legitimidade para a realizar; mas o vendedor não pode opor a nulidade ao comprador de boa fé, como não pode opô-la ao vendedor de boa fé o comprador doloso.} em relação a Jerónimo, que não poderá opor a Pedro a nulidade do negócio consigo celebrado, desde que Pedro esteja de {boa-fé:Estado em que uma pessoa desconhece um vício ou defeito}.
+
+#Pedro estará de {boa-fé:Estado em que uma pessoa desconhece um vício ou defeito}, uma vez que confiou nas presunções do registo (7.o, n.o 1, do
+CRPred): como Carlota não havia registado a sua propriedade sobre o apartamento,
+Jerónimo ainda figurava, no registo, como sendo o seu proprietário.
+
+#Carlota não registou a sua propriedade, os efeitos volitivo-finais decorrentes do contrato celebrado com Jerónimo apenas se produzem {inter partes:Entre as partes do contrato} (4.o do CRPred), pois, nos termos do artigo 5.o do CRPred, @os factos sujeitos a registo só produzem efeitos contra terceiros para efeitos de registo depois da data do respetivo registo.@
+
+#Ora, nos termos do artigo 5.o, n.o 4, do CRPred, terceiros para efeitos de registo são
+aqueles que adquiriram, de autor comum, direitos incompatíveis entre si. Carlota é titular de um direito de propriedade e Pedro é titular de um direito de oponibilidade relativa em relação a Jerónimo.
+
+#Carlota não pode opor o seu direito de propriedade a Pedro, na medida em que não
+procedeu ao registo da mesma. Para além disso, Pedro registou a sua aquisição.
+
+#Princípio da prevalência do direito inscrito em primeiro lugar (6.o do CRPred): o direito que foi inscrito em primeiro lugar foi o direito de oponibilidade relativa de Pedro,@ será este que prevalecerá.@
+#Pedro adquire o direito de propriedade sobre o apartamento. {Aquisição tabular a non domino:Aquisição de um bem de quem não é o seu proprietário}.
+
+#Carlota não teria razão em pedir a restituição do apartamento. Pode pedir a Jerónimo uma indemnização por responsabilidade contratual (798.o). </textarea>
+                </div>
+            </div>
+            
+            <div class="format-info">
+                <strong>📝 Formatação disponível:</strong><br>
+                • <code>#</code> separa as partes da resposta<br>
+                • <code>@texto@</code> para comentários/destaques<br>
+                • <code>{termo:explicação}</code> para informações adicionais
+            </div>
+            
+            <div class="controls">
+                <button id="setupButton">Configurar Aplicação</button>
+                <button id="clearButton" class="clear-btn">Limpar Campos</button>
+            </div>
+            
+            <div class="library-section">
+                <h3 style="margin-bottom: 15px; color: #2c3e50;">📚 Biblioteca de Casos</h3>
+                
+                <div class="library-controls">
+                    <input type="text" id="caseName" class="library-input" placeholder="Nome para salvar este caso">
+                    <button id="saveCaseBtn" class="library-btn save-btn">💾 Salvar + Exportar</button>
+                    <button id="importCaseBtn" class="library-btn import-btn">📤 Importar</button>
+                    <input type="file" id="fileInput" accept=".json" style="display: none;">
+                </div>
+                
+                <div class="navigation-controls">
+                    <button id="prevCaseBtn" class="nav-btn" disabled>◀ Anterior</button>
+                    <span id="caseCounter" style="padding: 8px 15px; font-weight: 600;">0/0</span>
+                    <button id="nextCaseBtn" class="nav-btn" disabled>Próximo ▶</button>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <h4 style="margin-bottom: 10px; color: #2c3e50;">Casos Salvos</h4>
+                    <div id="savedCasesList" class="saved-cases-container">
+                        <div style="text-align: center; color: #95a5a6; padding: 20px; font-style: italic;">
+                            Nenhum caso salvo ainda
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <div class="case-section">
+                <h2 class="case-title">
+                    Caso Prático
+                    <div class="case-header-controls">
+                        <button class="audio-btn" id="caseAudioBtn" title="Ouvir/Parar caso">🔊</button>
+                    </div>
+                </h2>
+                <div class="case-text" id="caseDisplay">
+                    <!-- O caso prático será exibido aqui -->
+                </div>
+            </div>
+            
+            <div class="work-section">
+                <div class="parts-sidebar">
+                    <h3 class="parts-title">
+                        Partes da Resposta
+                        <button class="audio-btn" id="partsAudioBtn" title="Ouvir/Parar todas as partes">🔊</button>
+                    </h3>
+                    <div class="parts-container" id="answerParts">
+                        <!-- As partes da resposta serão exibidas aqui -->
+                    </div>
+                </div>
+                
+                <div class="answer-area">
+                    <h2 class="work-title">
+                        Monte a Resposta
+                        <button class="audio-btn" id="answerAudioBtn" title="Ouvir/Parar resposta montada">🔊</button>
+                    </h2>
+                    
+                    <div class="stats-panel">
+                        <div class="stat-item">
+                            <div class="stat-value" id="timerDisplay">00:00</div>
+                            <div class="stat-label">TEMPO</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="movesCounter">0</div>
+                            <div class="stat-label">MOVIMENTOS</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="progressCounter">0/<span id="totalParts">0</span></div>
+                            <div class="stat-label">PROGRESSO</div>
+                        </div>
+                    </div>
+                    
+                    <div class="drop-zone-wrapper">
+                        <div class="drop-zone" id="answerArea">
+                            <p class="drop-zone-placeholder">Arraste as partes da resposta para esta área</p>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-message" id="completionMessage">
+                        <!-- Mensagem de conclusão será exibida aqui -->
+                    </div>
+                    
+                    <div class="study-reminder" id="studyReminder">
+                        ⚠️ Lembre-se: Esta ferramenta é um auxílio ao estudo, mas <strong>nada substitui a feitura manual dos casos práticos e estudo aprofundado</strong> das matérias.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="simple-credits">
+            <div class="author-info">
+                <strong>Desenvolvido por:</strong> Samuel Antonio Pereira (A105848)<br>
+                Estudante do 3º ano de Licenciatura em Direito Pós-Laboral - <strong>Uminho</strong><br>
+                Data de criação: 26 de Novembro de 2025
+            </div>
+            
+            <div class="license-info">
+                <div class="license-title">📄 Termos de Uso e Licença:</div>
+                <div>
+                    Esta aplicação é disponibilizada gratuitamente para uso pessoal e educacional.<br>
+                    <strong>Permitido:</strong> Utilização, modificação e distribuição <strong>sem fins comerciais</strong>.<br>
+                    <strong>Obrigatório:</strong> Reconhecimento dos créditos ao autor original.<br>
+                    <strong>Proibido:</strong> Uso comercial sem autorização expressa.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="colorblind-toggle" id="colorblindToggle" title="Ativar/Desativar modo daltônico">👁️ Modo Daltônico</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ============ ELEMENTOS DA INTERFACE ============
+            const caseInput = document.getElementById('caseInput');
+            const answerInput = document.getElementById('answerInput');
+            const setupButton = document.getElementById('setupButton');
+            const clearButton = document.getElementById('clearButton');
+            const caseDisplay = document.getElementById('caseDisplay');
+            const answerParts = document.getElementById('answerParts');
+            const answerArea = document.getElementById('answerArea');
+            const completionMessage = document.getElementById('completionMessage');
+            const progressCounter = document.getElementById('progressCounter');
+            const totalPartsSpan = document.getElementById('totalParts');
+            
+            // Elementos da biblioteca
+            const caseNameInput = document.getElementById('caseName');
+            const saveCaseBtn = document.getElementById('saveCaseBtn');
+            const importCaseBtn = document.getElementById('importCaseBtn');
+            const fileInput = document.getElementById('fileInput');
+            const savedCasesList = document.getElementById('savedCasesList');
+            
+            // Navegação
+            const prevCaseBtn = document.getElementById('prevCaseBtn');
+            const nextCaseBtn = document.getElementById('nextCaseBtn');
+            const caseCounter = document.getElementById('caseCounter');
+            
+            // Áudio
+            const caseAudioBtn = document.getElementById('caseAudioBtn');
+            const partsAudioBtn = document.getElementById('partsAudioBtn');
+            const answerAudioBtn = document.getElementById('answerAudioBtn');
+            
+            // Estatísticas
+            const timerDisplay = document.getElementById('timerDisplay');
+            const movesCounter = document.getElementById('movesCounter');
+            
+            // Controles admin
+            const adminSection = document.getElementById('adminSection');
+            const toggleAdminBtn = document.getElementById('toggleAdminBtn');
+            
+            // Daltônico
+            const colorblindToggle = document.getElementById('colorblindToggle');
+            
+            // ============ VARIÁVEIS GLOBAIS ============
+            let answerPartsArray = [];
+            let currentOrder = [];
+            let currentCaseIndex = -1;
+            let savedCases = [];
+            
+            let timerInterval = null;
+            let secondsElapsed = 0;
+            let moveCount = 0;
+            let isTimerRunning = false;
+            
+            // Variáveis para controle de tooltip
+            let currentTooltip = null;
+            let tooltipTimeout = null;
+            
+            // Controle de áudio
+            const speechSynthesis = window.speechSynthesis;
+            let currentAudioBtn = null;
+            let isSpeaking = false;
+            let currentUtterance = null;
+            
+            // ============ INICIALIZAÇÃO ============
+            adminSection.classList.add('minimized');
+            toggleAdminBtn.textContent = 'Maximizar';
+            
+            // ============ SISTEMA DE TOOLTIP SIMPLES ============
+            
+            function initializeTooltips(element) {
+                const tooltipTerms = element.querySelectorAll('.term-with-tooltip');
+                
+                tooltipTerms.forEach(term => {
+                    term.addEventListener('mouseenter', function(e) {
+                        clearTimeout(tooltipTimeout);
+                        
+                        if (currentTooltip) {
+                            currentTooltip.remove();
+                        }
+                        
+                        currentTooltip = document.createElement('div');
+                        currentTooltip.className = 'tooltip';
+                        currentTooltip.textContent = this.dataset.explanation;
+                        document.body.appendChild(currentTooltip);
+                        
+                        const rect = this.getBoundingClientRect();
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+                        
+                        currentTooltip.style.top = (rect.top + scrollTop - currentTooltip.offsetHeight - 5) + 'px';
+                        currentTooltip.style.left = (rect.left + scrollLeft) + 'px';
+                        
+                        setTimeout(() => {
+                            currentTooltip.classList.add('show');
+                        }, 10);
+                    });
+                    
+                    term.addEventListener('mouseleave', function() {
+                        tooltipTimeout = setTimeout(() => {
+                            if (currentTooltip) {
+                                currentTooltip.classList.remove('show');
+                                setTimeout(() => {
+                                    if (currentTooltip && currentTooltip.parentNode) {
+                                        currentTooltip.remove();
+                                        currentTooltip = null;
+                                    }
+                                }, 200);
+                            }
+                        }, 100);
+                    });
+                });
+            }
+            
+            // Processar tooltips no texto
+            function processTooltips(text) {
+                const pattern = /\{([^}]+)\}/g;
+                return text.replace(pattern, function(match, content) {
+                    const parts = content.split(':');
+                    if (parts.length >= 2) {
+                        const term = parts[0].trim();
+                        const explanation = parts.slice(1).join(':').trim();
+                        return `<span class="term-with-tooltip" data-explanation="${explanation}">${term}</span>`;
+                    }
+                    return match;
+                });
+            }
+            
+            // ============ SISTEMA DE ÁUDIO CORRIGIDO ============
+            
+            // CORREÇÃO: Função para criar botão de áudio funcional
+            function createAudioButton(partData) {
+                const audioBtn = document.createElement('button');
+                audioBtn.className = 'part-audio-btn';
+                audioBtn.innerHTML = '🔊';
+                audioBtn.title = 'Ouvir esta parte';
+                
+                // CORREÇÃO: Event listener funcional
+                audioBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    speakText(partData.text, 'pt-BR', audioBtn);
+                });
+                
+                return audioBtn;
+            }
+            
+            function speakText(text, lang, audioBtn) {
+                if (isSpeaking && currentUtterance) {
+                    speechSynthesis.cancel();
+                    isSpeaking = false;
+                    if (currentAudioBtn) {
+                        currentAudioBtn.classList.remove('playing');
+                        currentAudioBtn.innerHTML = '🔊';
+                    }
+                }
+                
+                const cleanText = text.replace(/\{([^}]+)\}/g, (match, content) => {
+                    const parts = content.split(':');
+                    return parts[0];
+                }).trim();
+                
+                if (!cleanText) return;
+                
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = lang;
+                utterance.rate = 1.0;
+                
+                const voices = speechSynthesis.getVoices();
+                const portugueseVoice = voices.find(voice => 
+                    voice.lang.startsWith('pt') || 
+                    voice.name.toLowerCase().includes('portuguese')
+                );
+                
+                if (portugueseVoice) utterance.voice = portugueseVoice;
+                
+                utterance.onstart = function() {
+                    isSpeaking = true;
+                    if (audioBtn) {
+                        audioBtn.classList.add('playing');
+                        audioBtn.innerHTML = '⏹️';
+                        currentAudioBtn = audioBtn;
+                    }
+                    currentUtterance = utterance;
+                };
+                
+                utterance.onend = function() {
+                    isSpeaking = false;
+                    if (currentAudioBtn) {
+                        currentAudioBtn.classList.remove('playing');
+                        currentAudioBtn.innerHTML = '🔊';
+                        currentAudioBtn = null;
+                    }
+                };
+                
+                utterance.onerror = function() {
+                    isSpeaking = false;
+                    if (currentAudioBtn) {
+                        currentAudioBtn.classList.remove('playing');
+                        currentAudioBtn.innerHTML = '🔊';
+                        currentAudioBtn = null;
+                    }
+                };
+                
+                speechSynthesis.speak(utterance);
+            }
+            
+            function stopAllAudio() {
+                if (isSpeaking && currentUtterance) {
+                    speechSynthesis.cancel();
+                    isSpeaking = false;
+                    if (currentAudioBtn) {
+                        currentAudioBtn.classList.remove('playing');
+                        currentAudioBtn.innerHTML = '🔊';
+                        currentAudioBtn = null;
+                    }
+                }
+            }
+            
+            // Event listeners de áudio principais
+            caseAudioBtn.addEventListener('click', function() {
+                if (isSpeaking && currentAudioBtn === this) {
+                    stopAllAudio();
+                    return;
+                }
+                speakText(caseInput.value, 'pt-BR', this);
+            });
+            
+            partsAudioBtn.addEventListener('click', function() {
+                if (isSpeaking && currentAudioBtn === this) {
+                    stopAllAudio();
+                    return;
+                }
+                const allParts = answerPartsArray.map(p => p.text).join('. ');
+                speakText(allParts, 'pt-BR', this);
+            });
+            
+            answerAudioBtn.addEventListener('click', function() {
+                if (isSpeaking && currentAudioBtn === this) {
+                    stopAllAudio();
+                    return;
+                }
+                
+                const partsInArea = Array.from(answerArea.querySelectorAll('.answer-part'));
+                if (partsInArea.length === 0) {
+                    showAlert('A resposta ainda não foi montada', 'warning');
+                    return;
+                }
+                
+                // CORREÇÃO: Extrair texto corretamente das partes na área de resposta
+                const assembledText = partsInArea
+                    .map(part => {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = part.innerHTML;
+                        let text = tempDiv.textContent || tempDiv.innerText || '';
+                        text = text.replace(/\s+/g, ' ').trim();
+                        return text;
+                    })
+                    .join('. ');
+                
+                speakText(assembledText, 'pt-BR', this);
+            });
+            
+            // ============ CONFIGURAÇÃO PRINCIPAL ============
+            
+            setupButton.addEventListener('click', function() {
+                startTimer();
+                moveCount = 0;
+                updateMovesCounter();
+                
+                answerPartsArray = [];
+                currentOrder = [];
+                completionMessage.classList.remove('show');
+                
+                if (currentTooltip) {
+                    currentTooltip.remove();
+                    currentTooltip = null;
+                }
+                
+                stopAllAudio();
+                
+                const caseText = caseInput.value;
+                const answerText = answerInput.value;
+                
+                caseDisplay.innerHTML = '';
+                caseDisplay.textContent = caseText;
+                
+                const rawParts = answerText.split('#').map(p => p.trim()).filter(p => p);
+                
+                rawParts.forEach((rawPart, index) => {
+                    let processedPart = rawPart;
+                    let comment = null;
+                    
+                    const commentMatch = rawPart.match(/@([^@]+)@/);
+                    if (commentMatch) {
+                        comment = commentMatch[1].trim();
+                        processedPart = rawPart.replace(/@[^@]+@/, '');
+                    }
+                    
+                    let textForDisplay = processTooltips(processedPart);
+                    let textForAudio = processedPart.replace(/\{([^}]+)\}/g, (match, content) => {
+                        const parts = content.split(':');
+                        return parts[0];
+                    }).trim();
+                    
+                    textForAudio = textForAudio.replace(/\s+/g, ' ').trim();
+                    
+                    if (textForAudio) {
+                        answerPartsArray.push({
+                            text: textForAudio,
+                            html: textForDisplay,
+                            comment: comment,
+                            hasComment: !!comment,
+                            index: index,
+                            commentShown: false
+                        });
+                    }
+                });
+                
+                totalPartsSpan.textContent = answerPartsArray.length;
+                updateProgressIndicator();
+                
+                answerParts.innerHTML = '';
+                answerArea.innerHTML = '';
+                
+                const placeholder = document.createElement('p');
+                placeholder.className = 'drop-zone-placeholder';
+                placeholder.textContent = 'Arraste as partes da resposta para esta área';
+                answerArea.appendChild(placeholder);
+                
+                answerPartsArray.forEach((part, index) => {
+                    const partElement = createPartElement(part, index);
+                    answerParts.appendChild(partElement);
+                });
+                
+                shuffleParts();
+            });
+            
+            // ============ FUNÇÕES AUXILIARES ============
+            
+            function createPartElement(part, displayIndex) {
+                const element = document.createElement('div');
+                element.className = 'answer-part';
+                element.innerHTML = part.html || part.text;
+                element.draggable = true;
+                element.dataset.index = displayIndex;
+                element.dataset.originalIndex = part.index;
+                
+                // CORREÇÃO: Criar botão de áudio que funciona
+                const audioBtn = createAudioButton(part);
+                element.appendChild(audioBtn);
+                
+                if (part.hasComment) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'comment-indicator';
+                    indicator.textContent = '!';
+                    indicator.title = 'Tem comentário explicativo';
+                    element.appendChild(indicator);
+                }
+                
+                element.addEventListener('dragstart', handleDragStart);
+                element.addEventListener('dragend', handleDragEnd);
+                
+                element.addEventListener('dblclick', function() {
+                    if (this.parentElement === answerParts) {
+                        movePartToAnswerArea(this);
+                    }
+                });
+                
+                // Toque duplo para mobile
+                let tapCount = 0;
+                let tapTimer;
+                element.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    tapCount++;
+                    
+                    if (tapCount === 1) {
+                        tapTimer = setTimeout(() => {
+                            tapCount = 0;
+                        }, 300);
+                    } else if (tapCount === 2) {
+                        clearTimeout(tapTimer);
+                        tapCount = 0;
+                        if (this.parentElement === answerParts) {
+                            movePartToAnswerArea(this);
+                        }
+                    }
+                });
+                
+                initializeTooltips(element);
+                
+                return element;
+            }
+            
+            // CORREÇÃO: Função para mover parte para área de resposta com áudio funcionando
+            function movePartToAnswerArea(element) {
+                const index = parseInt(element.dataset.index);
+                const partData = answerPartsArray[index];
+                
+                incrementMoveCount();
+                
+                const container = document.createElement('div');
+                container.className = 'part-container';
+                container.dataset.index = index;
+                
+                // CORREÇÃO: Em vez de clonar, criar novo elemento com áudio funcional
+                const newElement = document.createElement('div');
+                newElement.className = 'answer-part';
+                newElement.innerHTML = partData.html || partData.text;
+                newElement.draggable = false;
+                newElement.dataset.index = index;
+                newElement.dataset.originalIndex = partData.index;
+                
+                // CORREÇÃO: Adicionar botão de áudio que funciona
+                const audioBtn = createAudioButton(partData);
+                newElement.appendChild(audioBtn);
+                
+                if (partData.hasComment) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'comment-indicator';
+                    indicator.textContent = '!';
+                    indicator.title = 'Tem comentário explicativo';
+                    newElement.appendChild(indicator);
+                }
+                
+                container.appendChild(newElement);
+                answerArea.appendChild(container);
+                
+                const placeholder = answerArea.querySelector('.drop-zone-placeholder');
+                if (placeholder) placeholder.remove();
+                
+                element.remove();
+                currentOrder.push(index);
+                
+                // CORREÇÃO: Inicializar tooltips no novo elemento
+                initializeTooltips(newElement);
+                
+                checkPartPosition(newElement, container);
+                updateProgressIndicator();
+            }
+            
+            // ============ EVENT LISTENERS ============
+            
+            // Salvar caso + exportar automaticamente
+            saveCaseBtn.addEventListener('click', function() {
+                const caseName = caseNameInput.value.trim();
+                if (!caseName) {
+                    showAlert('Por favor, dê um nome para o caso', 'warning');
+                    return;
+                }
+                
+                const caseData = {
+                    name: caseName,
+                    caseText: caseInput.value,
+                    answerText: answerInput.value,
+                    date: new Date().toLocaleString('pt-BR'),
+                    id: Date.now(),
+                    timeSpent: secondsElapsed,
+                    moves: moveCount,
+                    credits: {
+                        author: "Samuel Antonio Pereira (A105848)",
+                        license: "Uso não-comercial com atribuição",
+                        created: "26-11-2025"
+                    }
+                };
+                
+                // Salvar no localStorage
+                savedCases = JSON.parse(localStorage.getItem('lawCases') || '[]');
+                const existingIndex = savedCases.findIndex(c => c.name === caseName);
+                if (existingIndex !== -1) {
+                    if (!confirm(`Já existe um caso chamado "${caseName}". Deseja substituí-lo?`)) {
+                        return;
+                    }
+                    savedCases[existingIndex] = caseData;
+                } else {
+                    savedCases.push(caseData);
+                }
+                localStorage.setItem('lawCases', JSON.stringify(savedCases));
+                
+                // Exportar automaticamente como arquivo JSON
+                try {
+                    exportIndividualCase(caseData);
+                    showAlert(`✅ Caso salvo e exportado como "${caseName}.json"`, 'success');
+                } catch (error) {
+                    showAlert(`✅ Caso salvo, mas erro na exportação: ${error.message}`, 'warning');
+                }
+                
+                loadSavedCases();
+                caseNameInput.value = '';
+            });
+            
+            // Função para exportar caso individual
+            function exportIndividualCase(caseData) {
+                const exportData = {
+                    timestamp: new Date().toISOString(),
+                    dateHuman: new Date().toLocaleString('pt-BR'),
+                    case: caseData,
+                    application: "NOTA 20 - Aplicação de Fixação de Termos",
+                    version: "1.0",
+                    author: "Samuel Antonio Pereira (A105848)",
+                    type: "individual_case"
+                };
+                
+                const safeName = caseData.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                const filename = `NOTA20_CASO_${safeName}_${new Date().toISOString().split('T')[0]}.json`;
+                
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                return true;
+            }
+            
+            // Limpar campos
+            clearButton.addEventListener('click', function() {
+                caseInput.value = '';
+                answerInput.value = '';
+                caseNameInput.value = '';
+                showAlert('Campos limpos!', 'warning');
+            });
+            
+            // Minimizar/maximizar
+            toggleAdminBtn.addEventListener('click', function() {
+                adminSection.classList.toggle('minimized');
+                this.textContent = adminSection.classList.contains('minimized') ? 'Maximizar' : 'Minimizar';
+            });
+            
+            // Mostrar alerta
+            function showAlert(message, type = 'info') {
+                const colors = {
+                    success: '#27ae60',
+                    warning: '#e67e22',
+                    info: '#3498db',
+                    error: '#e74c3c'
+                };
+                
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'highlight-alert';
+                alertDiv.style.background = `linear-gradient(135deg, ${colors[type]} 0%, ${colors[type]}99 100%)`;
+                alertDiv.textContent = message;
+                
+                document.body.appendChild(alertDiv);
+                
+                setTimeout(() => {
+                    alertDiv.style.animation = 'alertSlideOut 0.3s ease-out';
+                    setTimeout(() => {
+                        if (alertDiv.parentNode) {
+                            alertDiv.remove();
+                        }
+                    }, 300);
+                }, 3000);
+            }
+            
+            // ============ FUNCIONALIDADES RESTANTES ============
+            
+            // Modo daltônico
+            colorblindToggle.addEventListener('click', function() {
+                document.body.classList.toggle('colorblind');
+                this.classList.toggle('active');
+                this.textContent = document.body.classList.contains('colorblind') 
+                    ? '👁️ Modo Normal' 
+                    : '👁️ Modo Daltônico';
+                showAlert(document.body.classList.contains('colorblind') 
+                    ? 'Modo daltônico ativado' 
+                    : 'Modo daltônico desativado', 'info');
+            });
+            
+            // Timer
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                secondsElapsed = 0;
+                updateTimerDisplay();
+                isTimerRunning = true;
+                timerInterval = setInterval(function() {
+                    secondsElapsed++;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+            
+            function updateTimerDisplay() {
+                const minutes = Math.floor(secondsElapsed / 60);
+                const seconds = secondsElapsed % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            function stopTimer() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    isTimerRunning = false;
+                }
+            }
+            
+            // Movimentos
+            function incrementMoveCount() {
+                moveCount++;
+                updateMovesCounter();
+            }
+            
+            function updateMovesCounter() {
+                movesCounter.textContent = moveCount;
+            }
+            
+            // Drag and drop
+            function handleDragStart(e) {
+                this.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', this.dataset.index);
+            }
+            
+            function handleDragEnd() {
+                this.classList.remove('dragging');
+            }
+            
+            answerArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            });
+            
+            answerArea.addEventListener('dragleave', function() {
+                this.classList.remove('highlight');
+            });
+            
+            answerArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+                
+                const index = e.dataTransfer.getData('text/plain');
+                const element = document.querySelector(`.answer-part[data-index="${index}"]`);
+                
+                if (element && element.parentElement === answerParts) {
+                    incrementMoveCount();
+                    movePartToAnswerArea(element);
+                }
+            });
+            
+            // Verificar posição
+            function checkPartPosition(partElement, container) {
+                const displayIndex = parseInt(partElement.dataset.index);
+                const currentPos = currentOrder.indexOf(displayIndex);
+                const correctPos = parseInt(partElement.dataset.originalIndex);
+                
+                partElement.classList.remove('correct-position', 'incorrect-position');
+                
+                if (currentPos === correctPos) {
+                    partElement.classList.add('correct-position');
+                    
+                    const partData = answerPartsArray[displayIndex];
+                    if (partData.hasComment && partData.comment && !partData.commentShown) {
+                        setTimeout(() => {
+                            showComment(container, partData.comment);
+                            partData.commentShown = true;
+                            showCommentAlert(partData.comment);
+                        }, 300);
+                    }
+                    
+                    checkCompletion();
+                } else {
+                    partElement.classList.add('incorrect-position');
+                    setTimeout(() => {
+                        returnPartToOrigin(partElement, container);
+                    }, 800);
+                }
+            }
+            
+            // Comentário
+            function showComment(container, comment) {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'highlight-comment';
+                commentDiv.textContent = comment;
+                commentDiv.title = comment.length > 80 ? comment : '';
+                
+                setTimeout(() => {
+                    commentDiv.classList.add('show');
+                }, 10);
+                
+                container.appendChild(commentDiv);
+            }
+            
+            function showCommentAlert(comment) {
+                const messages = [
+                    "💡 Comentário desbloqueado!",
+                    "📝 Explicação adicional disponível!",
+                    "🎯 Informação importante revelada!",
+                    "⭐ Destaque especial ativado!"
+                ];
+                
+                const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+                
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'highlight-alert';
+                alertDiv.innerHTML = `
+                    <strong>${randomMsg}</strong>
+                    <div style="margin-top: 5px; font-size: 13px; opacity: 0.9;">
+                        ${comment.substring(0, 80)}${comment.length > 80 ? '...' : ''}
+                    </div>
+                `;
+                
+                document.body.appendChild(alertDiv);
+                
+                setTimeout(() => {
+                    alertDiv.style.animation = 'alertSlideOut 0.3s ease-out';
+                    setTimeout(() => {
+                        if (alertDiv.parentNode) {
+                            alertDiv.remove();
+                        }
+                    }, 300);
+                }, 3500);
+            }
+            
+            // Retornar parte à origem
+            function returnPartToOrigin(partElement, container) {
+                const index = parseInt(partElement.dataset.index);
+                
+                if (container && container.parentNode) {
+                    container.remove();
+                }
+                
+                const pos = currentOrder.indexOf(index);
+                if (pos > -1) {
+                    currentOrder.splice(pos, 1);
+                }
+                
+                if (answerPartsArray[index]) {
+                    answerPartsArray[index].commentShown = false;
+                }
+                
+                const newElement = createPartElement(answerPartsArray[index], index);
+                answerParts.appendChild(newElement);
+                
+                updateProgressIndicator();
+                
+                if (answerArea.querySelectorAll('.part-container').length === 0) {
+                    const placeholder = document.createElement('p');
+                    placeholder.className = 'drop-zone-placeholder';
+                    placeholder.textContent = 'Arraste as partes da resposta para esta área';
+                    answerArea.appendChild(placeholder);
+                }
+                
+                completionMessage.classList.remove('show');
+            }
+            
+            // Progresso
+            function updateProgressIndicator() {
+                const correct = countCorrectPositions();
+                progressCounter.textContent = `${correct}/${answerPartsArray.length}`;
+                
+                if (correct === answerPartsArray.length) {
+                    progressCounter.style.color = '#2ecc71';
+                } else if (correct > 0) {
+                    progressCounter.style.color = '#f39c12';
+                } else {
+                    progressCounter.style.color = '#4b6cb7';
+                }
+            }
+            
+            function countCorrectPositions() {
+                let count = 0;
+                for (let i = 0; i < currentOrder.length; i++) {
+                    if (currentOrder[i] === i) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+            
+            function checkCompletion() {
+                const correctParts = countCorrectPositions();
+                const totalParts = answerPartsArray.length;
+                
+                if (correctParts === totalParts) {
+                    stopTimer();
+                    
+                    completionMessage.innerHTML = `
+                        <div style="font-size: 18px; margin-bottom: 10px;">🎉 Parabéns! Resposta totalmente correta!</div>
+                        <div style="font-size: 14px; margin-bottom: 5px;">⏱️ Tempo: ${formatTime(secondsElapsed)}</div>
+                        <div style="font-size: 14px; margin-bottom: 10px;">👆 Movimentos: ${moveCount}</div>
+                        <div style="font-size: 12px; opacity: 0.8; font-style: italic;">
+                            Continue praticando! Lembre-se que esta ferramenta complementa, mas não substitui, 
+                            o estudo aprofundado e a prática manual dos casos.
+                        </div>
+                    `;
+                    completionMessage.classList.add('show');
+                }
+            }
+            
+            // Embaralhar
+            function shuffleParts() {
+                const children = Array.from(answerParts.children);
+                children.sort(() => Math.random() - 0.5);
+                children.forEach(child => answerParts.appendChild(child));
+            }
+            
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // Biblioteca de casos
+            function loadSavedCases() {
+                savedCases = JSON.parse(localStorage.getItem('lawCases') || '[]');
+                savedCasesList.innerHTML = '';
+                
+                if (savedCases.length === 0) {
+                    savedCasesList.innerHTML = '<div style="text-align: center; color: #95a5a6; padding: 20px; font-style: italic;">Nenhum caso salvo ainda</div>';
+                    updateNavigationControls();
+                    return;
+                }
+                
+                savedCases.sort((a, b) => b.id - a.id);
+                
+                savedCases.forEach((caseData, index) => {
+                    const caseItem = document.createElement('div');
+                    caseItem.className = 'case-item';
+                    
+                    caseItem.innerHTML = `
+                        <div class="case-item-info">
+                            <div class="case-item-name" title="${caseData.name}">${caseData.name}</div>
+                            <div class="case-item-date">${caseData.date}</div>
+                            ${caseData.timeSpent ? `<div style="font-size: 11px; color: #3498db;">⏱️ ${formatTime(caseData.timeSpent)} | 👆 ${caseData.moves || 0} mov.</div>` : ''}
+                        </div>
+                        <div class="case-item-actions">
+                            <button class="case-action-btn load-btn" data-index="${index}" title="Carregar caso">Carregar</button>
+                            <button class="case-action-btn delete-btn" data-index="${index}" title="Excluir caso">Excluir</button>
+                        </div>
+                    `;
+                    
+                    savedCasesList.appendChild(caseItem);
+                });
+                
+                document.querySelectorAll('.load-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        loadCase(index);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        deleteCase(index);
+                    });
+                });
+                
+                updateNavigationControls();
+            }
+            
+            // Carregar caso
+            function loadCase(index) {
+                if (index >= 0 && index < savedCases.length) {
+                    const caseData = savedCases[index];
+                    
+                    caseInput.value = caseData.caseText;
+                    answerInput.value = caseData.answerText;
+                    caseNameInput.value = caseData.name;
+                    
+                    currentCaseIndex = index;
+                    setupButton.click();
+                    
+                    if (caseData.timeSpent) {
+                        secondsElapsed = caseData.timeSpent;
+                        updateTimerDisplay();
+                    }
+                    
+                    if (caseData.moves) {
+                        moveCount = caseData.moves;
+                        updateMovesCounter();
+                    }
+                    
+                    showAlert(`Caso "${caseData.name}" carregado!`, 'success');
+                    updateNavigationControls();
+                }
+            }
+            
+            // Excluir caso
+            function deleteCase(index) {
+                if (!confirm('Tem certeza que deseja excluir este caso?')) {
+                    return;
+                }
+                
+                if (index >= 0 && index < savedCases.length) {
+                    const caseName = savedCases[index].name;
+                    savedCases.splice(index, 1);
+                    
+                    if (currentCaseIndex === index) {
+                        currentCaseIndex = -1;
+                    } else if (currentCaseIndex > index) {
+                        currentCaseIndex--;
+                    }
+                    
+                    localStorage.setItem('lawCases', JSON.stringify(savedCases));
+                    loadSavedCases();
+                    showAlert(`Caso "${caseName}" excluído!`, 'warning');
+                }
+            }
+            
+            // Navegação
+            function updateNavigationControls() {
+                const totalCases = savedCases.length;
+                
+                if (totalCases === 0) {
+                    prevCaseBtn.disabled = true;
+                    nextCaseBtn.disabled = true;
+                    caseCounter.textContent = '0/0';
+                    currentCaseIndex = -1;
+                    return;
+                }
+                
+                if (currentCaseIndex === -1 && totalCases > 0) {
+                    currentCaseIndex = 0;
+                }
+                
+                prevCaseBtn.disabled = currentCaseIndex <= 0;
+                nextCaseBtn.disabled = currentCaseIndex >= totalCases - 1;
+                caseCounter.textContent = `${currentCaseIndex + 1}/${totalCases}`;
+            }
+            
+            // Importar caso
+            importCaseBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const caseData = JSON.parse(event.target.result);
+                        
+                        if (!caseData.caseText || !caseData.answerText) {
+                            throw new Error('Arquivo JSON inválido: faltam dados do caso');
+                        }
+                        
+                        caseInput.value = caseData.caseText;
+                        answerInput.value = caseData.answerText;
+                        caseNameInput.value = caseData.name || '';
+                        
+                        setupButton.click();
+                        
+                        showAlert('Caso importado com sucesso!', 'success');
+                        fileInput.value = '';
+                        
+                    } catch (error) {
+                        alert('Erro ao importar arquivo: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            // Navegação entre casos
+            prevCaseBtn.addEventListener('click', function() {
+                if (currentCaseIndex > 0) {
+                    loadCase(currentCaseIndex - 1);
+                }
+            });
+            
+            nextCaseBtn.addEventListener('click', function() {
+                if (currentCaseIndex < savedCases.length - 1) {
+                    loadCase(currentCaseIndex + 1);
+                }
+            });
+            
+            // Configurar inicialmente
+            setupButton.click();
+            loadSavedCases();
+            
+            // Carregar vozes
+            setTimeout(() => {
+                speechSynthesis.getVoices();
+            }, 1000);
+            
+            // Limpar ao fechar
+            window.addEventListener('beforeunload', function() {
+                if (isSpeaking && currentUtterance) {
+                    speechSynthesis.cancel();
+                }
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
